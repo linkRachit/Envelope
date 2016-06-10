@@ -1,0 +1,238 @@
+<!DOCTYPE html>{% load socialaccount i18n %}{% load static tz %}
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <link rel="icon" href="favicon.ico">
+
+    <title>List of scheduled posts</title>
+
+    <!-- Bootstrap core CSS -->
+    
+    <link href="{% get_static_prefix %}dist/css/bootstrap.min.css" rel="stylesheet">
+
+
+    <!-- Custom styles for this template -->
+    <link rel="stylesheet" href="{% get_static_prefix %}value/Envelope.css">
+    <link rel="stylesheet" href="{% get_static_prefix %}{% get_static_prefix %}value/style.css">
+    <link rel="stylesheet" href="{% get_static_prefix %}value/AdminLTE.min.css">
+    <link rel="stylesheet" href="{% get_static_prefix %}value/dropzone.css">
+    
+    
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.4.0/css/font-awesome.min.css">
+
+    <link rel="stylesheet" href="{% get_static_prefix %}css/styles.css" type="text/css" media="screen" />
+
+    <script src="http://code.jquery.com/jquery-1.11.2.min.js"></script>
+    <!-- Just for debugging purposes. Don't actually copy these 2 lines! -->
+    <!--[if lt IE 9]><script src="../../assets/js/ie8-responsive-file-warning.js"></script><![endif]-->
+    <script src="{% get_static_prefix %}assets/js/ie-emulation-modes-warning.js"></script>
+    <script src="{% get_static_prefix %}value/dropzone.js"></script>
+
+    {% block extra_css %}{% endblock %}
+
+
+    <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
+    <!--[if lt IE 9]>
+      <script src="https://oss.maxcdn.com/html5shiv/3.7.2/html5shiv.min.js"></script>
+      <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
+    <![endif]-->
+  </head>
+
+  <body>
+
+    <nav class="navbar navEnvelope navbar-fixed-top ">
+      <div class="container-fluid">
+        <div class="navbar-header">
+          <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
+            <span class="sr-only">Toggle navigation</span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+          </button>
+          <a class="navbar-brand nav-item" href="/">Envelope</a>
+        </div>
+        <div class="navbar-custom-menu navbar-right navbar-collapse "><!-- remove collapse-->
+            <ul class="nav navbar-nav">
+              <li>
+                <a href="{% url "account_logout" %}" class="btn btn-default btn-flat">Sign out</a>
+              </li>
+            </ul>
+          </div>
+        
+      </div>
+    </nav>
+
+    <div class="container-fluid">
+      <div class="row">
+        
+        <div class="col-sm-6 col-sm-offset-0 col-md-12 col-md-offset-0 main">
+          <div class="col-sm-10  col-md-10 col-xs-10 ">
+          <h1 class="page-header">Common Portal</h1>
+          </div>
+
+                    <div class="col-sm-2  col-md-2 col-xs-2 ">
+                      <strong class="curr_time">{% localtime on %}{{ current_time }} {% get_current_timezone as tz %}{{ tz }}{% endlocaltime %}</strong>
+                    </div>
+          <div class="container">
+            <div class="col-sm-12  col-md-12 col-xs-12 ">
+              <div class="col-sm-12  col-md-12 col-xs-12 ">  
+
+                  <div class="col-sm-6  col-md-6 col-xs-6 ">
+
+                  <a class="btn btn-block btn btn-lg btn-twitter" href="{% provider_login_url "twitter" process="connect" %}">
+                                <i class="fa fa-twitter"></i>    Twitter
+                            </a>
+                  </div>
+                  <div class="col-sm-6  col-md-6 col-xs-6 ">
+                    <a class="btn btn-block btn btn-lg btn-facebook" href="{% provider_login_url "facebook" method="oauth2" process="connect" %}"><i class="fa fa-facebook"></i>    Facebook</a>
+                  </div>
+
+                  </div>
+
+              <div class="pure-g">
+                  <div class="pure-u-1-5"></div>
+                
+                
+                  <div class="connect">
+                   {% if request.user.is_authenticated %}
+                  
+                   {% endif %}
+                    
+                  </div>
+                  <div>
+                    <ul class="messages">
+                    {% if messages %}
+                    {% for message in messages %}
+                    <li{% if message.tags %} class="{{ message.tags }}"{% endif %}>
+                    {% if message.level == DEFAULT_MESSAGE_LEVELS.ERROR %}Important: {% endif %}
+                    {{ message }}
+                    </li>
+                    {% endfor %}
+                    {% endif %}
+                    </ul>
+                  </div>
+                  
+
+                  
+                  <div class="col-sm-12  col-md-12 col-xs-12 ">
+                  <br>
+                  <br>
+                  <br>
+                  <center>
+                  <h2>
+                  <a href="{% url "scheduled_posts_add" %}">{% trans "To Schedule a post Click Here" %}</a> | <a href="javascript:void(0);" class="api_key">{% trans "To View API Key Click Here" %}</a>
+                  <p class="hidden api_key_holder"><strong>API Key:</strong> {{ api_keys.all.0.token }}</p></h2>
+                  </div>
+                  <center>
+
+
+
+                  <div class="col-sm-12  col-md-12 col-xs-12 ">
+
+                    <br><br><br><br><br>
+                  <table>
+                  {% for post in posts %}
+                  {% if forloop.first %}
+                  <tr>
+                    <th>{% trans "Status" %}</th>
+                    <th>{% trans "Service" %}</th>
+                    <th>{% trans "Scheduled Time" %}</th>
+                    <th>{% trans "Action" %}</th>
+                  </tr>
+                  {% endif %}
+                  <tr>
+                    <td>{{ post.status }}</td>
+                    <td>{{ post.service|capfirst }}</td>
+                    <td class="datetime">{{ post.scheduled_datetime|date:"c" }}</td>
+                    <td>
+                    <a href="{% url "scheduled_posts_edit" id=post.id %}">{% trans "Edit" %}</a>
+                      |
+                    <a href="javascript:deletePost('{% url "scheduled_posts_delete" id=post.id %}');">{% trans "Delete" %}</a>
+                    </td>
+                  </tr>
+                    {% empty %}{% url scheduled_posts_add as scheduled_posts_add_url %}
+                    <tr><td colspan="4">{% blocktrans with add_url=scheduled_posts_add_url %}No scheduled posts in the queue.{% endblocktrans %}</td></tr>
+                  {% endfor %}
+                  </table>
+
+
+
+                  </div>
+                    <div class="pure-u-1-5"></div>
+                  </div>
+
+              
+              </div>
+            </div>
+          </div>
+
+          
+          
+        </div>
+        
+      </div>
+    </div>
+
+    <!-- Bootstrap core JavaScript
+    ================================================== -->
+    <!-- Placed at the end of the document so the pages load faster -->
+    <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+    
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+    <script src="{% get_static_prefix %}dist/js/bootstrap.min.js"></script>
+    
+    <!-- Just to make our placeholder images work. Don't actually copy the next line! -->
+    <script src="{% get_static_prefix %}assets/js/vendor/holder.min.js"></script>
+    <!-- IE10 viewport hack for Surface/desktop Windows 8 bug -->
+    <script src="{% get_static_prefix %}assets/js/ie10-viewport-bug-workaround.js"></script>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.11.1/moment.min.js"></script>
+    <script type="text/javascript" src="{% get_static_prefix %}js/moment-timezone-with-data-2010-2020.min.js"></script>
+    <script type="text/javascript">
+      (function() {
+    var timeHolder = document.querySelector(".curr_time");
+    var tz = moment.tz.guess();
+          timeHolder.innerHTML = moment.tz(tz).format("YYYY-MM-DD HH:mm a z");
+    setInterval(function() {
+        timeHolder.innerHTML = moment.tz(tz).format("YYYY-MM-DD HH:mm a z");
+    }, 60000);
+      })();
+    </script>
+    <script type="text/javascript">
+    function deletePost(url) {
+  if (confirm("{% trans "Are you sure you want to delete the post?" %}")) {
+      window.location = url;
+  }
+    }
+    (function() {
+  var apiKeyLink = document.querySelector(".api_key");
+  apiKeyLink.addEventListener("click", function() {
+      var apiKeyHolder = document.querySelector(".api_key_holder");
+      if (apiKeyHolder.className.search(/hidden/) >= 0) {
+    apiKeyHolder.className = "api_key_holder";
+    apiKeyLink.innerHTML = "{% trans "To Hide API Key Click Here" %}";
+      } else {
+    apiKeyHolder.className = "hidden api_key_holder";
+    apiKeyLink.innerHTML = "{% trans "To View API Key Click Here" %}";
+      }
+  });
+
+  var tz = moment.tz.guess();
+  var datetimes = document.querySelectorAll(".datetime");
+  for (var ii=0; ii < datetimes.length; ii++) {
+      datetimes[ii].innerHTML = moment(new Date(datetimes[ii].innerHTML)).tz(tz).format("YYYY-MM-DD HH:mm A z");
+  }
+    })();
+</script>
+  </body>
+</html>
+
+
+
+
+
+
