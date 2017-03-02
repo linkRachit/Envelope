@@ -1,8 +1,8 @@
-Envelope-Schedule Your Posts
+# Envelope-Schedule Your Posts
 
 
 
-User Manual 
+## User Manual 
 
 apt-get update
 apt-get upgrade
@@ -19,7 +19,8 @@ virtualenv pro
 
 source pro/bin/activate
 
-Clone the git repo  git clone https://github.com/linkrachit/Envelope
+Clone the git repo  
+git clone https://github.com/linkrachit/Envelope
 cd Envelope 
 pip install django
 pip install django-auth
@@ -72,7 +73,7 @@ name domain
 address http://localhost:8000
 
 
- http://localhost:8000/admin/socialaccount/socialapp/
+http://localhost:8000/admin/socialaccount/socialapp/
  seperate for fb and twitter
 
 Setup a crontab script that runs the following command every minute  
